@@ -17,7 +17,9 @@ var connection = mysql.createConnection({
 
 connection.connect(function (err) {
     if (err) throw err;
+    console.log("----------------------")
     console.log("Connection Successful!");
+    console.log("----------------------\n")
     showItems();
 });
 
@@ -27,7 +29,7 @@ function promptUser() {
         inquirer.prompt([
             {
                 name: "command",
-                message: "Which item do you want to purchase?",
+                message: "\nWhich item do you want to purchase?",
                 type: "list",
                 choices: function () {
                     var choices = [];
@@ -43,8 +45,8 @@ function promptUser() {
             // console.log(results[quantity].stock_quantity)
             inquirer.prompt([{
                 name: "quantityPurchase",
-                type: "input",
                 message: "How many of these do you need?",
+                type: "input",
                 validate: function (value) {
                     if (parseInt(value) < 0) {
                         console.log("\nPlease enter a valid input.")
@@ -63,7 +65,6 @@ function promptUser() {
 
 function showItems() {
     connection.query("SELECT * FROM products", function (err, results) {
-        console.log("------------------------\n")
         console.log("Items Available for Sale")
         for (var i = 0; i < results.length; i++) {
             console.log(
@@ -71,7 +72,6 @@ function showItems() {
                 " | " + results[i].product_name +
                 " | $" + results[i].consumer_price);
         }
-        console.log("------------------------\n")
         promptUser();
     });
 }
@@ -88,8 +88,15 @@ function updateDb(results, quantity, value, splitItemId) {
             }
         ],
         function (err, res) {
-            console.log("\nDatabase Updated\n");
-            console.log("Thank you for your purchase!");
+            var product = " product.";
+            if (value > 1) {
+                product = " products.";
+            }
+            process.stdout.write("\nYou have purchased " + value + " ")
+            process.stdout.write(results[splitItemId - 1].product_name);
+            process.stdout.write(product)
+            console.log("\nThank you for your purchase!");
         }
     );
+    promptUser();
 }

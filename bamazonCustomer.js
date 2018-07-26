@@ -18,7 +18,7 @@ var connection = mysql.createConnection({
 connection.connect(function (err) {
     if (err) throw err;
     console.log("----------------------")
-    console.log("Connection Successful!");
+    console.log("  Welcome, Customer!  ");
     console.log("----------------------\n")
     showItems();
 });

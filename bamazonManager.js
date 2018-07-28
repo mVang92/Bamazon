@@ -146,26 +146,19 @@ function addNew() {
             },
         ]).then(function (input) {
             var query = connection.query(
-                "INSERT INTO products (product_name, department_name, consumer_price, stock_quantity) VALUES (?,?,?,?);",
-                [
-                    {
-                        product_name: input.productName
-                    },
-                    {
-                        department_name: input.deptName
-                    },
-                    {
-                        consumer_price: input.consumerPrice
-                    },
-                    {
-                        stock_quantity: parseInt(input.stockQuantity)
-                    }
-                ],
+                "INSERT INTO products SET ?",
+                {
+                    product_name: input.productName,
+                    department_name: input.deptName,
+                    consumer_price: input.consumerPrice,
+                    stock_quantity: parseInt(input.stockQuantity)
+                },
                 function (err, res) {
                     console.log("Added")
                     promptMngr();
                 }
             );
+            // console.log(query.sql);
         });
     });
 }

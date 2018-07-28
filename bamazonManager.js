@@ -51,6 +51,7 @@ function promptMngr() {
 
 function showItems() {
     connection.query("SELECT * FROM products", function (err, results) {
+        console.log("");
         for (var i = 0; i < results.length; i++) {
             console.log(
                 results[i].item_id +
@@ -62,8 +63,8 @@ function showItems() {
 }
 
 function viewLowInv() {
-    // console.log("Low Inv");
     connection.query("SELECT * FROM products WHERE stock_quantity < 5", function (err, results) {
+        console.log("");
         for (var i = 0; i < results.length; i++) {
             console.log(
                 results[i].item_id +
@@ -75,7 +76,6 @@ function viewLowInv() {
 }
 
 function addInv() {
-    // console.log("Add Inv");
     connection.query("SELECT * FROM products", function (err, results) {
         if (err) throw err;
         inquirer.prompt([
@@ -103,7 +103,7 @@ function addInv() {
                         console.log("\nPlease enter a valid input.")
                         return false;
                     } else if (parseInt(value) > 0) {
-                        updateDb(results, quantity, value, splitItemId);
+                        addInvUpdateDb(results, quantity, value, splitItemId);
                         return true;
                     }
                 }
@@ -113,11 +113,64 @@ function addInv() {
 }
 
 function addNew() {
-    console.log("add new");
-    promptMngr();
+    connection.query("SELECT * FROM products", function (err, results) {
+        if (err) throw err;
+        inquirer.prompt([
+            {
+                name: "productName",
+                message: "\nEnter the product name.",
+                type: "input"
+            },
+            {
+                name: "deptName",
+                message: "\nEnter the department name.",
+                type: "input"
+            },
+            {
+                name: "consumerPrice",
+                message: "\nEnter the consumer price.",
+                type: "input"
+            },
+            {
+                name: "stockQuantity",
+                message: "\nEnter the stock quantity.",
+                type: "input",
+                validate: function (value) {
+                    if (parseInt(value) < 0) {
+                        console.log("\nPlease enter a valid stock quantity.")
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+            },
+        ]).then(function (input) {
+            var query = connection.query(
+                "INSERT INTO products (product_name, department_name, consumer_price, stock_quantity) VALUES (?,?,?,?);",
+                [
+                    {
+                        product_name: input.productName
+                    },
+                    {
+                        department_name: input.deptName
+                    },
+                    {
+                        consumer_price: input.consumerPrice
+                    },
+                    {
+                        stock_quantity: parseInt(input.stockQuantity)
+                    }
+                ],
+                function (err, res) {
+                    console.log("Added")
+                    promptMngr();
+                }
+            );
+        });
+    });
 }
 
-function updateDb(results, quantity, value, splitItemId) {
+function addInvUpdateDb(results, quantity, value, splitItemId) {
     var query = connection.query(
         "UPDATE products SET ? WHERE ?",
         [
@@ -129,15 +182,17 @@ function updateDb(results, quantity, value, splitItemId) {
             }
         ],
         function (err, res) {
-            var product = " product.";
+            var product = " product.\n";
             if (value > 1) {
-                product = " products.";
+                product = " products.\n";
             }
+            console.log("")
             process.stdout.write(results[splitItemId - 1].product_name);
             process.stdout.write(" updated by ")
             process.stdout.write(value)
             process.stdout.write(" more")
             process.stdout.write(product)
+            promptMngr();
         }
     );
 }

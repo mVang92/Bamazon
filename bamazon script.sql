@@ -45,3 +45,4 @@ VALUES ("ASUS ROG Spatha", "Computer Peripherals", "129.99", 6);
 SELECT * FROM products;
 
 -- UPDATE products SET stock_quantity = 55 WHERE item_id = 1;
+-- SELECT * FROM products WHERE stock_quantity < 5;

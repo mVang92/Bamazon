@@ -23,7 +23,7 @@ connection.connect(function (err) {
     promptMngr();
 });
 
-function promptMngr(){
+function promptMngr() {
     inquirer.prompt([
         {
             name: "command",
@@ -51,7 +51,6 @@ function promptMngr(){
 
 function showItems() {
     connection.query("SELECT * FROM products", function (err, results) {
-        console.log("\nItems Available for Sale")
         for (var i = 0; i < results.length; i++) {
             console.log(
                 results[i].item_id +
@@ -62,17 +61,83 @@ function showItems() {
     });
 }
 
-function viewLowInv(){
-    console.log("view low");
-    promptMngr();
+function viewLowInv() {
+    // console.log("Low Inv");
+    connection.query("SELECT * FROM products WHERE stock_quantity < 5", function (err, results) {
+        for (var i = 0; i < results.length; i++) {
+            console.log(
+                results[i].item_id +
+                " | " + results[i].product_name +
+                " | " + results[i].stock_quantity + " in stock.");
+        }
+        promptMngr();
+    });
 }
 
-function addInv(){
-    console.log("add inv");
-    promptMngr();
+function addInv() {
+    // console.log("Add Inv");
+    connection.query("SELECT * FROM products", function (err, results) {
+        if (err) throw err;
+        inquirer.prompt([
+            {
+                name: "item",
+                message: "\nSelect the product you want to update.",
+                type: "list",
+                choices: function () {
+                    var choices = [];
+                    for (var i = 0; i < results.length; i++) {
+                        choices.push(results[i].item_id + " | " + results[i].product_name)
+                    }
+                    return choices;
+                }
+            }
+        ]).then(function (chosenItem) {
+            var splitItemId = chosenItem.item.split(" ", 1);
+            var quantity = parseInt(splitItemId - 1);
+            inquirer.prompt([{
+                name: "addInv",
+                message: "Enter the amount you want to add.",
+                type: "input",
+                validate: function (value) {
+                    if (parseInt(value) < 0) {
+                        console.log("\nPlease enter a valid input.")
+                        return false;
+                    } else if (parseInt(value) > 0) {
+                        updateDb(results, quantity, value, splitItemId);
+                        return true;
+                    }
+                }
+            }]);
+        });
+    });
 }
 
-function addNew(){
+function addNew() {
     console.log("add new");
     promptMngr();
+}
+
+function updateDb(results, quantity, value, splitItemId) {
+    var query = connection.query(
+        "UPDATE products SET ? WHERE ?",
+        [
+            {
+                stock_quantity: parseInt(results[quantity].stock_quantity) + parseInt(value)
+            },
+            {
+                item_id: splitItemId
+            }
+        ],
+        function (err, res) {
+            var product = " product.";
+            if (value > 1) {
+                product = " products.";
+            }
+            process.stdout.write(results[splitItemId - 1].product_name);
+            process.stdout.write(" updated by ")
+            process.stdout.write(value)
+            process.stdout.write(" more")
+            process.stdout.write(product)
+        }
+    );
 }

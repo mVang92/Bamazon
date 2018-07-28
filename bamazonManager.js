@@ -19,7 +19,7 @@ connection.connect(function (err) {
     if (err) throw err;
     console.log("----------------------")
     console.log("   Welcome, Manager!  ");
-    console.log("----------------------\n")
+    console.log("----------------------")
     promptMngr();
 });
 
@@ -29,7 +29,12 @@ function promptMngr() {
             name: "command",
             message: "\nSelect an option:",
             type: "list",
-            choices: ["Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product"]
+            choices: [
+                "Products for Sale",
+                "View Low Inventory",
+                "Add to Inventory",
+                "Add New Product"
+            ]
         }
     ]).then(function (choice) {
         switch (choice.command) {
@@ -135,8 +140,8 @@ function addNew() {
                 name: "stockQuantity",
                 message: "\nEnter the stock quantity.",
                 type: "input",
-                validate: function (value) {
-                    if (parseInt(value) < 0) {
+                validate: function (stockQuantity) {
+                    if (parseInt(stockQuantity) <= 0) {
                         console.log("\nPlease enter a valid stock quantity.")
                         return false;
                     } else {
@@ -154,7 +159,16 @@ function addNew() {
                     stock_quantity: parseInt(input.stockQuantity)
                 },
                 function (err, res) {
-                    console.log("Added")
+                    var product = " product";
+                    if (input.stockQuantity > 1) {
+                        product = " products";
+                    }
+                    process.stdout.write("\nSuccessfully added ");
+                    process.stdout.write(input.stockQuantity);
+                    process.stdout.write(" ");
+                    process.stdout.write(input.productName);
+                    process.stdout.write(product);
+                    process.stdout.write(" to the database.\n");
                     promptMngr();
                 }
             );
@@ -179,12 +193,12 @@ function addInvUpdateDb(results, quantity, value, splitItemId) {
             if (value > 1) {
                 product = " products.\n";
             }
-            console.log("")
+            console.log("");
             process.stdout.write(results[splitItemId - 1].product_name);
-            process.stdout.write(" updated by ")
-            process.stdout.write(value)
-            process.stdout.write(" more")
-            process.stdout.write(product)
+            process.stdout.write(" updated by ");
+            process.stdout.write(value);
+            process.stdout.write(" more");
+            process.stdout.write(product);
             promptMngr();
         }
     );

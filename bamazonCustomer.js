@@ -20,8 +20,31 @@ connection.connect(function (err) {
     console.log("----------------------")
     console.log("  Welcome, Customer!  ");
     console.log("----------------------\n")
-    showItems();
+    selection();
 });
+
+function selection() {
+    inquirer.prompt([
+        {
+            name: "command",
+            message: "\nSelect an option:",
+            type: "list",
+            choices: ["Products for Sale", "Purchase Products", "Exit"]
+        }
+    ]).then(function (choice) { 
+        switch (choice.command) {
+            case "Products for Sale":
+                showItems();
+                break;
+            case "Purchase Products":
+                promptUser();
+                break;
+            case "Exit":
+                connection.end();
+                break;
+        }
+    });
+}
 
 function promptUser() {
     connection.query("SELECT * FROM products", function (err, results) {
@@ -42,7 +65,6 @@ function promptUser() {
         ]).then(function (answers) {
             var splitItemId = answers.command.split(" ", 1);
             var quantity = parseInt(splitItemId - 1);
-            // console.log(results[quantity].stock_quantity)
             inquirer.prompt([{
                 name: "quantityPurchase",
                 message: "How many of these do you need?",
@@ -72,7 +94,7 @@ function showItems() {
                 " | " + results[i].product_name +
                 " | $" + results[i].consumer_price);
         }
-        promptUser();
+        selection();
     });
 }
 
@@ -96,7 +118,7 @@ function updateDb(results, quantity, value, splitItemId) {
             process.stdout.write(results[splitItemId - 1].product_name);
             process.stdout.write(product)
             console.log("\nThank you for your purchase!");
+            selection();
         }
     );
-    promptUser();
 }

@@ -29,7 +29,7 @@ function promptMngr() {
             name: "command",
             message: "\nSelect an option:",
             type: "list",
-            choices: ["Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product"]
+            choices: ["Products for Sale", "View Low Inventory", "Add to Inventory", "Add New Product", "Exit"]
         }
     ]).then(function (choice) {
         switch (choice.command) {
@@ -44,6 +44,9 @@ function promptMngr() {
                 break;
             case "Add New Product":
                 addNew();
+                break;
+            case "Exit":
+                connection.end();
                 break;
         };
     });
@@ -128,7 +131,7 @@ function addNew() {
             },
             {
                 name: "consumerPrice",
-                message: "\nEnter the consumer price.",
+                message: "\nEnter the consumer price. (Exclude dollar sign)",
                 type: "input"
             },
             {
@@ -154,11 +157,14 @@ function addNew() {
                     stock_quantity: parseInt(input.stockQuantity)
                 },
                 function (err, res) {
-                    console.log("Added")
+                    console.log("\nYou have added: ");
+                    console.log("Product Name: " + input.productName)
+                    console.log("Department: " + input.deptName)
+                    console.log("Price: $" + input.consumerPrice)
+                    console.log("Stock Quantity: " + input.stockQuantity)
                     promptMngr();
                 }
             );
-            // console.log(query.sql);
         });
     });
 }

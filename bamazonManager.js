@@ -19,7 +19,7 @@ connection.connect(function (err) {
     if (err) throw err;
     console.log("----------------------")
     console.log("   Welcome, Manager!  ");
-    console.log("----------------------\n")
+    console.log("----------------------")
     promptMngr();
 });
 
@@ -138,8 +138,8 @@ function addNew() {
                 name: "stockQuantity",
                 message: "\nEnter the stock quantity.",
                 type: "input",
-                validate: function (value) {
-                    if (parseInt(value) < 0) {
+                validate: function (stockQuantity) {
+                    if (parseInt(stockQuantity) <= 0) {
                         console.log("\nPlease enter a valid stock quantity.")
                         return false;
                     } else {
@@ -185,12 +185,12 @@ function addInvUpdateDb(results, quantity, value, splitItemId) {
             if (value > 1) {
                 product = " products.\n";
             }
-            console.log("")
+            console.log("");
             process.stdout.write(results[splitItemId - 1].product_name);
-            process.stdout.write(" updated by ")
-            process.stdout.write(value)
-            process.stdout.write(" more")
-            process.stdout.write(product)
+            process.stdout.write(" updated by ");
+            process.stdout.write(value);
+            process.stdout.write(" more");
+            process.stdout.write(product);
             promptMngr();
         }
     );

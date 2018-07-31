@@ -3,7 +3,7 @@ Assignment 10 Node.js &amp; MySQL
 
 This program includes a MySQL database for customers and managers to interact with. Customers may view the products and choose the products they want to purchase. Managers have a few more options, where they can view the products for sale, update invintory, and so on. Let's take a look at how a customer interacts with the application.
 
-# Customer User Interface
+** Customer User Interface **
 Upon running the application, the customer is greeted with three options. They can view the products for sale, make a purchase, or simply exit the program.
 ![alt text](images/customerSelection.JPG)
 
@@ -19,7 +19,7 @@ Once the product has been selected, the customer can then enter the amount they 
 When the customer has purchased the product, the application will confirm their purchase by displaying the quantity and product that was chosen by the customer. The customer can now purchase more items or exit the application.
 ![alt text](images/customerPurchaseComplete.JPG)
 
-# Manager User Interface
+** Manager User Interface **
 Like the customer, the manager is greeted with a few choices upon start up. There are a few more options compared to the customers' view.
 ![alt text](images/managerSelection.JPG)
 

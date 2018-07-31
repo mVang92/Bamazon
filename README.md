@@ -2,7 +2,7 @@
 Assignment 10 Node.js &amp; MySQL
 
 ## Program Description
-This program uses a MySQL database for customers and managers to interact with. This is a very basic site where customers can purchase items just like if you were to purchase something from an online website. In this program, customers may view the products and choose the products they want to purchase. Managers have a few more options, where they can view the products for sale, update inventory, and more. Let's take a look at how a customer interacts with the program.
+This program uses a MySQL database for customers and managers to interact with. This is a very basic program where customers can purchase items just like purchase something from an online website. In this program, customers may view the products and choose the products they want to purchase. Managers have a few more options, where they can view the products for sale, update inventory, and more. Let's take a look at how a customer interacts with the program.
 
 **Customer User Interface**
 Upon running the program, the customer is greeted with three options. They can view the products for sale, make a purchase, or simply exit the program.
